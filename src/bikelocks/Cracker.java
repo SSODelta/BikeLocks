@@ -53,7 +53,7 @@ public class Cracker {
             print("Moves:\t" + moves);
             print("\t\t"+ moves.size()+" rotations ("+((int)(1000*(1 - g.moves(l).size() / Math.pow(10, settings.columns))))/10.0+"% saved)");
 
-            print("\nBreaking the lock would take "+estimate(moves.size()));
+            print("\nBreaking the lock would take "+estimate(moves.size())+".");
         } catch(IllegalArgumentException e){
             print("Moves:\t-invalid-");
         }
@@ -67,18 +67,22 @@ public class Cracker {
             h = (int)(hi * x);
 
         if(h < 60){
+            if(l == h)
+                return h+" second"+(h>1?"s":"");
             return l+"-"+h+" seconds";
         }
 
         if(h < 60*60){
             int hm = (int)Math.round(h/60.0);
             if(l < 60){
-                return l + " seconds to "+hm+" minutes";
+                return l + " second"+(l>1?"s":"")+" to "+hm+" minute"+(hm>1?"s":"");
             }
             int lm = (int)Math.round(h/60.0);
+            if(lm == hm)
+                return hm+" minute"+(hm>1?"s":"");
             return lm+"-"+hm+" minutes";
         }
 
-        return "a long time";
+        return "at least an hour";
     }
 }

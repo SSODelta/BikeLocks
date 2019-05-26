@@ -10,21 +10,39 @@ public class BikeLock {
     public static final List<BikeLock> movesBetween(BikeLock from, BikeLock to){
         List<BikeLock> locks = moveTo(from, to);
 
-        return locks.subList(1, locks.size()-1);
+        return locks.subList(1, locks.size());
     }
 
     public static final List<BikeLock> moveTo(BikeLock from, BikeLock to){
+
+        int N = from.offset.length;
 
         if(from.equals(to))
             return new ArrayList<>();
 
         // Find one move to apply
-        int[] doffsets = new int[from.offset.length];
-        for(int i=0; i<from.offset.length; i++)
-            doffsets[i] = to.offset[i] - from.offset[i];
-
+        int[] doffsets = new int[N];
+        for(int i=0; i<N; i++) {
+            int d = to.offset[i] - from.offset[i];
+            if(d<-4)
+                d += 10;
+            else if(d>5)
+                d -= 10;
+            doffsets[i] = d;
+        }
+        int offset = 0, start = 0, len = 0;
+        for(int i=0; i<N; i++){
+            start = i;
+            if(doffsets[start] != 0) {
+                offset = (int)Math.signum(doffsets[start]);
+                for (int j=1; j <= N-start; j++)
+                    if(offset == (int)Math.signum(doffsets[start-1+j]))
+                        len = j;
+                break;
+            }
+        }
         // Apply move
-        BikeLock next = from.rotate(0,0,0);
+        BikeLock next = from.rotate(start,len,offset);
 
         // Compute rest of moves
         List<BikeLock> locks = moveTo(next, to);

@@ -3,6 +3,7 @@ package bikelocks.solvers;
 
 import bikelocks.BikeLock;
 import bikelocks.Graph;
+import org.sat4j.minisat.core.Solver;
 import org.sat4j.specs.IProblem;
 import org.sat4j.specs.TimeoutException;
 
@@ -23,12 +24,11 @@ public class SATSolver implements PathSolver {
                         locks.add(Graph.j(ints[i],N));
                 return locks;
             } else {
-                System.out.println("awww");
+                throw new SolverException("The graph does not have a Hamiltonian path");
             }
         } catch (TimeoutException e) {
-            e.printStackTrace();
+            throw new SolverException("The computation timed out: "+e.getLocalizedMessage());
         }
-        return null;
     }
 
     @Override
